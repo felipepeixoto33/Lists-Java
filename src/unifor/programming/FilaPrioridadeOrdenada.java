@@ -1,91 +1,77 @@
 package unifor.programming;
 
-public class ListaDinamicaOrdenada {
-    private No primeiro;
-    private No ultimo;
+public class FilaPrioridadeOrdenada {
+    private NoPrioridade primeiro;
+    private NoPrioridade ultimo;
     private int cont;
 
-    public ListaDinamicaOrdenada() {
+    public FilaPrioridadeOrdenada() {
         primeiro = null;
         ultimo = null;
         cont = 0;
     }
 
-    public void push(int valor) {
-        No novo  = new No(valor);
+    public void enqueue(Object valor, int prioridade) {
+        NoPrioridade novo  = new NoPrioridade(valor, prioridade);
 
         if (primeiro == null) {  // Lista vazia?
             primeiro = novo;
             ultimo = novo;
         } else {
 
-            No aux = primeiro;
 
-            if( valor < (int) primeiro.dado) {
 
-                novo.proximo = aux;
+            if( novo.prioridade < primeiro.prioridade) {
+
+                novo.proximo = primeiro;
+                primeiro.anterior = novo;
                 primeiro = novo;
 
-            } else if(valor > (int) ultimo.dado) {
-
+            } else if(novo.prioridade >= ultimo.prioridade) {
                 ultimo.proximo = novo;
+                novo.anterior = ultimo;
                 ultimo = novo;
 
             } else {
 
-                while( (int) aux.proximo.dado < valor) {
+
+                NoPrioridade aux = primeiro;
+
+                while( aux != null && novo.prioridade >= aux.prioridade) { //
                     aux = aux.proximo;
                 }
 
-                novo.proximo = aux.proximo;
-                aux.proximo = novo;
+                novo.proximo = aux;
+                novo.anterior = aux.anterior;
+                aux.anterior = novo;
+                novo.anterior.proximo = novo;
 
             }
         }
         cont++;
     }
 
-    public void pop(int posicao) {
-        No aux = primeiro;
+    public void dequeue() {
+        if(primeiro != null) {
 
-        if(length()>1) {
+            if(length() > 1) {
 
-            if (posicao == 0) {
-
-                primeiro = aux.proximo;
-
+                primeiro = primeiro.proximo;
+                primeiro.anterior = null;
 
             } else {
 
-                for (int i = 0; i < posicao - 1; i++) {
-                    aux = aux.proximo;
-                }
-
-                if (posicao == length() - 1) {
-
-                    ultimo = aux;
-                    aux.proximo = null;
-
-                } else {
-
-                    aux.proximo = aux.proximo.proximo;
-
-                }
-            }
-        } else {
-
-            if(posicao == 0) {
                 primeiro = null;
                 ultimo = null;
+
             }
 
         }
-
         cont--;
     }
 
     public boolean search(int valor) {
-        No aux = primeiro;
+        NoPrioridade aux = primeiro;
         while(aux != null) {
             if( (int) aux.dado == valor) {
                 return true;
@@ -99,7 +85,7 @@ public class ListaDinamicaOrdenada {
     public int searchIndex(int valor) {
 
         if(valor < length()) {
-            No aux = primeiro;
+            NoPrioridade aux = primeiro;
 
             for (int i = 0; i < valor; i++) {
                 aux = aux.proximo;
@@ -117,7 +103,7 @@ public class ListaDinamicaOrdenada {
     }
 
     public int searchElement(int posicao) {
-        No aux = primeiro;
+        NoPrioridade aux = primeiro;
 
         for (int i = 0; i < posicao; i++) {
             aux = aux.proximo;
@@ -130,8 +116,17 @@ public class ListaDinamicaOrdenada {
         return this.cont;
     }
 
+    public NoPrioridade front() {
+        if(primeiro != null) {
+            return primeiro;
+        }
+
+        return null;
+
+    }
+
     public void show() {
-        No aux = primeiro;
+        NoPrioridade aux = primeiro;
 
         while (aux != null) {
             System.out.print(aux.dado + " ");
@@ -144,7 +139,7 @@ public class ListaDinamicaOrdenada {
 
         while(length() > 0) {
 
-            pop(0);
+            dequeue();
 
         }
 

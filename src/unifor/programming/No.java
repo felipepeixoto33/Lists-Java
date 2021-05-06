@@ -2,12 +2,10 @@ package unifor.programming;
 
 class No {
     public No proximo;
-    public No anterior;
-    public int dado;
+    public Object dado;
 
-    public No(int dado) {
+    public No(Object dado) {
         this.dado = dado;
-        this.anterior = null;
         this.proximo = null;
     }
 }

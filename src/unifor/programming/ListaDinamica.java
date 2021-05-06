@@ -11,7 +11,7 @@ public class ListaDinamica {
         cont = 0;
     }
 
-    public void push(int valor) {
+    public void push(Object valor) {
         No novo  = new No(valor);
 
         if (primeiro == null) {  // Lista vazia?
@@ -25,34 +25,40 @@ public class ListaDinamica {
         cont++;
     }
 
-    public void push(int posicao, int valor) {
+    public void push(int posicao, Object valor) {
         No novo  = new No(valor);
 
         if (primeiro == null) {  // Lista vazia?
             primeiro = novo;
             ultimo = novo;
 
-        } if(posicao == 0) { //Pos inicial
-            novo.proximo = primeiro;
-            primeiro = novo;
+        } else {
 
-        } else if(posicao == length()) { //N devia ser 'length() - 1' n?
-            ultimo.proximo = novo;
-            ultimo = novo;
-        }
+            if (posicao >= 0 && posicao <= length()) {
 
-        else {
-            No aux = primeiro;
+                if (posicao == 0) { //Pos inicial
+                    novo.proximo = primeiro;
+                    primeiro = novo;
 
-            for(int i = 0; i < posicao-1; i++) {
-                aux = aux.proximo;
+                } else if (posicao == length()) { //N devia ser 'length() - 1' n?
+                    ultimo.proximo = novo;
+                    ultimo = novo;
+                } else {
+                    No aux = primeiro;
+
+                    for (int i = 0; i < posicao - 1; i++) {
+                        aux = aux.proximo;
+                    }
+
+                    novo.proximo = aux.proximo;
+                    aux.proximo = novo;
+
+                }
+
+
             }
 
-            novo.proximo = aux.proximo;
-            aux.proximo = novo;
-
         }
-
         cont++;
     }
 
@@ -95,10 +101,10 @@ public class ListaDinamica {
         cont--;
     }
 
-    public boolean search(int valor) {
+    public boolean search(Object valor) {
         No aux = primeiro;
         while(aux != null) {
-            if(aux.dado == valor) {
+            if(aux.dado.equals(valor)) {
                 return true;
             }
             aux = aux.proximo;
@@ -107,7 +113,7 @@ public class ListaDinamica {
         return false;
     }
 
-    public int searchIndex(int valor) {
+    public Object searchIndex(int valor) {
 
         if(valor < length()) {
             No aux = primeiro;
@@ -127,18 +133,39 @@ public class ListaDinamica {
 
     }
 
-    public int searchElement(int posicao) {
-        No aux = primeiro;
+    public Object searchElement(int posicao) {
+        if(posicao < cont) {
+            No aux = primeiro;
 
-        for (int i = 0; i < posicao; i++) {
-            aux = aux.proximo;
+            for (int i = 0; i < posicao; i++) {
+                aux = aux.proximo;
+            }
+
+            return aux.dado;
+        } else {
+            System.out.println("Invalid position. This position is not on the list.");
+            System.exit(1);
+            return -1;
         }
-
-        return aux.dado;
     }
 
     public int length() {
         return this.cont;
+    }
+
+    public void clear() {
+
+        while(length() > 0) {
+            pop(0);
+        }
+
+    }
+
+    public boolean empty() {
+        if(primeiro == null) {
+            return true;
+        }
+        return false;
     }
 
     public void show() {

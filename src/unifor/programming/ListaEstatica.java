@@ -6,33 +6,46 @@ public class ListaEstatica {
     private int cont = 0;
 
 
-    public void push(Object n){
+    private void moreSize() {
+        Object[] aux = new Object[(int) (this.base.length * 1.5)];
 
-        if(cont < base.length) {
-            this.base[cont] = n;
-            cont++;
-        } else {
-            Object[] aux = new Object[(int) (base.length * 1.5)];
-
-            for(int i = 0; i < base.length; i++) {
-                aux[i] = base[i];
-            }
-
-            base = aux;
+        for (int i = 0; i < this.base.length; i++) {
+            aux[i] = base[i];
         }
+
+        this.base = aux;
+    }
+
+    public void push(Object n) {
+
+        if (cont >= base.length) {
+            moreSize();
+        }
+
+        this.base[cont] = n;
+        cont++;
     }
 
     public void push(Object n, int pos) {
-        if(pos < base.length) {
-            for (int i = pos; i < cont; i++) {
-                this.base[i + 1] = this.base[i];
-            }
 
-            this.base[pos] = n;
-            cont++;
+        if (cont < base.length) {
+
+            if (pos < base.length) {
+                for (int i = pos; i < cont; i++) {
+                    this.base[i + 1] = this.base[i];
+                }
+
+                this.base[pos] = n;
+                cont++;
+
+
+            } else {
+                System.out.println("Posição Inexistente ao tentar inserir valor.");
+                System.exit(1);
+            }
         } else {
-            System.out.println("Posição Inexistente ao tentar inserir valor.");
-            System.exit(1);
+            moreSize();
+            push(n, pos);
         }
     }
 
@@ -41,8 +54,8 @@ public class ListaEstatica {
     }
 
     public void pop(int pos) {
-        for(int i = pos; i < cont-1; i++) {
-            this.base[i] = this.base[i+1];
+        for (int i = pos; i < cont - 1; i++) {
+            this.base[i] = this.base[i + 1];
         }
         cont--;
     }
@@ -52,21 +65,20 @@ public class ListaEstatica {
     }
 
     public boolean search(Object n) {
-        boolean exists = false;
 
-        for(int i = 0; i < cont; i++) {
-            exists = false;
+        for (int i = 0; i < cont; i++) {
 
-            if(this.base[i].equals(n)) {
-                exists = true;
+            if (this.base[i].equals(n)) {
+                return true;
             }
+
         }
-        return exists;
+        return false;
     }
 
     public int searchIndex(Object element) {
-        for(int i = 0; i < cont; i++) {
-            if(this.base[i].equals(element)) {
+        for (int i = 0; i < cont; i++) {
+            if (this.base[i].equals(element)) {
                 return i;
             }
         }
@@ -87,8 +99,16 @@ public class ListaEstatica {
     }
 
     public void show() {
-        for(int i = 0; i < cont; i++) {
+        for (int i = 0; i < cont; i++) {
             System.out.print(this.base[i] + " ");
         }
+    }
+
+    public void clear() {
+
+        while(length() > 0) {
+            pop();
+        }
+
     }
 }
